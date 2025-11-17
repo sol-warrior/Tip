@@ -5,11 +5,15 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{program::invoke, system_instruction::transfer};
 
 pub fn _deposit_tip(ctx: Context<DepositTip>, amount: u64) -> Result<()> {
-    let bal = ctx.accounts.sender.get_lamports();
+    let sender_balance = ctx.accounts.sender.get_lamports();
 
-    if bal == 0 || bal < amount {
-        return err!(TipError::InsufficientBalance);
-    }
+    // if bal == 0 || bal < amount {
+    //     return err!(TipError::InsufficientBalance);
+    // }
+    require!(
+        sender_balance.checked_sub(amount).is_some(),
+        TipError::InsufficientBalance
+    );
     let ix = transfer(
         &ctx.accounts.sender.key(),
         &ctx.accounts.vault.key(),
