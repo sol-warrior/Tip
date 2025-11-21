@@ -5,7 +5,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <div>
-      <div className="flex items-center justify-center flex-col gap-4 h-[75vh]">
+      <div className="flex items-center justify-center flex-col gap-4 mt-56 mb-32">
         <Link href={"/builder"}>
           <Button
             variant={"secondary"}
