@@ -4,10 +4,11 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
+  SystemProgram,
   Transaction,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
-import { Program, Wallet } from "@coral-xyz/anchor";
+import { BN, Program, Wallet } from "@coral-xyz/anchor";
 import { AnchorProject } from "./anchor_project_idl";
 import idl from "./anchor_project_idl.json";
 import { getProgram } from "./program";
@@ -130,3 +131,87 @@ export async function getCreatorVaultAccount(
 
   return { exists: true, vaultPda, account };
 }
+
+export async function getDepositTip(
+  wallet: AnchorWallet,
+  conn: Connection,
+  amount: number,
+  tipid: string
+) {
+  if (!conn || !wallet.publicKey) {
+    console.error("Please connect your wallet");
+    throw new Error("Please connect your wallet");
+  }
+  const program = getProgram(conn, wallet);
+  if (!program) return;
+
+  const creatorVault = new PublicKey(tipid);
+  console.log("Depositing start ");
+  console.log("Wallet.pub", wallet.publicKey.toBase58());
+
+  console.log({ program });
+  console.log(amount);
+
+  const lamports = Math.round(amount * LAMPORTS_PER_SOL);
+  const bnAmount = new BN(lamports.toString());
+  const sign = await program.methods
+    .depositTip(bnAmount)
+    .accounts({
+      sender: wallet.publicKey,
+      vault: creatorVault,
+      systemProgram: SystemProgram.programId,
+    })
+    .rpc();
+
+  console.log("Signature of init_creator_vault", sign);
+  return sign;
+}
+
+export async function getWithdrawAllTip(
+  wallet: AnchorWallet,
+  conn: Connection
+) {
+  if (!conn || !wallet.publicKey) {
+    console.error("Please connect your wallet");
+    throw new Error("Please connect your wallet");
+  }
+  const program = getProgram(conn, wallet);
+  if (!program) return;
+
+  const [creatorVault, _] = PublicKey.findProgramAddressSync(
+    [Buffer.from("vault"), wallet.publicKey.toBuffer()],
+    new PublicKey(idl.address)
+  );
+  console.log("Vault Pda:", creatorVault.toString());
+
+  console.log("Depositing start ");
+  console.log("Wallet.pub", wallet.publicKey.toBase58());
+
+  const sign = await program.methods
+    .withdrawTip()
+    .accounts({
+      creator: wallet.publicKey,
+      vault: creatorVault,
+      systemProgram: SystemProgram.programId,
+    })
+    .rpc();
+
+  console.log("Deposit Tip Vault", sign);
+  return sign;
+}
+
+export const balOfVaultAccount = async (
+  conn: Connection,
+  address: PublicKey
+) => {
+  try {
+    const [vaultPda, _] = PublicKey.findProgramAddressSync(
+      [Buffer.from("vault"), new PublicKey(address).toBuffer()],
+      new PublicKey(idl.address)
+    );
+    let lamp = await conn.getBalance(vaultPda);
+    return lamp / 1000000000;
+  } catch (error) {
+    return 0;
+  }
+};
