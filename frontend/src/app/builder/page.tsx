@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
+  balOfVaultAccount,
   getCreatorAccount,
   getCreatorVaultAccount,
+  getWithdrawAllTip,
   initializeVault,
 } from "@/src/lib/anchor/services";
 import {
@@ -14,8 +16,9 @@ import {
   useConnection,
   useWallet,
 } from "@solana/wallet-adapter-react";
-import { Connection } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import { getConnection } from "@/src/lib/solana/connection";
+import { AnchorError } from "@coral-xyz/anchor";
 
 const dmsans = DM_Sans({
   subsets: ["latin"],
@@ -23,7 +26,7 @@ const dmsans = DM_Sans({
 const page = () => {
   const [isActivated, setIsActivated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isbal, setBal] = useState(false);
+  const [vaultBal, setBal] = useState<number>(0);
   const [vaultAcc, setVaultAcc] = useState<
     { creatorVault: string; totaltips: number; creatorAdd: string } | undefined
   >({
@@ -36,31 +39,34 @@ const page = () => {
 
   const handleActivateWallet = async () => {
     try {
-      setIsLoading(true);
-
       if (!wallet?.publicKey) {
         console.log("Please connect your wallet.");
         return;
       }
-      //check: creator vault exist
+      setIsLoading(true);
       const result = await getCreatorVaultAccount(wallet, connection);
 
-      // 2. Create if missing
       if (!result?.exists) {
         await initializeVault(wallet, connection);
       }
 
-      // 3. Always fetch final vault
       const final = await getCreatorVaultAccount(wallet, connection);
 
       setVaultAcc({
         creatorAdd: final?.account?.creator.toString() || "",
         creatorVault: final?.vaultPda.toString() || "",
-        totaltips: Number(final?.account.totalTips) || 0,
+        totaltips: Number(final?.account.totalTips) / 1e9 || 0,
       });
       setIsActivated(true);
     } catch (error) {
-      console.error("Vault setup failed:", error.message || error);
+      if (typeof error === "object" && error !== null && "message" in error) {
+        console.error(
+          "Vault setup failed:",
+          (error as { message?: string }).message
+        );
+      } else {
+        console.error("Vault setup failed:", error);
+      }
       // optionally show toast
       setIsActivated(false);
     } finally {
@@ -68,9 +74,34 @@ const page = () => {
     }
   };
 
+  const handleWithdrawTip = async () => {
+    try {
+      if (!wallet?.publicKey) return;
+
+      const bal = await getWithdrawAllTip(wallet, connection);
+      accBalance();
+    } catch (err) {
+      if (err instanceof AnchorError) {
+        console.log("Error Name:", err.name); // e.g., "InsufficientBalance"
+        console.log("Error Code:", err.error.errorCode); // e.g., 6001
+        console.log("Error Msg:", err.error.errorMessage); // e.g., "Insufficient balance"
+      } else {
+        console.error("Non-Anchor Error:", err);
+      }
+    }
+    // setBal(bal);
+  };
+
+  const accBalance = async () => {
+    if (!wallet?.publicKey) return;
+
+    const bal = await balOfVaultAccount(connection, wallet.publicKey);
+    setBal(bal);
+  };
   useEffect(() => {
     if (!wallet) return;
     handleActivateWallet();
+    accBalance();
   }, [wallet]);
   return (
     <>
@@ -89,8 +120,8 @@ const page = () => {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <p>Total tips : {vaultAcc?.totaltips} </p>
-          <p>Balance left : 2 left</p>
+          <p>Total tips : {vaultAcc?.totaltips} SOL </p>
+          <p>Balance left : {vaultBal} SOL</p>
         </div>
       </div>
 
@@ -119,9 +150,10 @@ const page = () => {
                 </Link>
               </p>
             </div>
-            {isbal && (
+            {vaultBal > 0 && (
               <div>
                 <Button
+                  onClick={handleWithdrawTip}
                   variant={"secondary"}
                   className="bg-[#522AA5] mt-3 hover:bg-[#5128a5d9] text-white font-semibold cursor-pointer"
                 >
