@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-import Navbar from "@/src/components/header/Navbar";
 import { checkCreatorVaultAccount } from "@/src/lib/anchor/services";
 import { getConnection } from "@/src/lib/solana/connection";
 import React, { useState } from "react";
@@ -69,7 +68,7 @@ const TipperPage = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-primary/40 mb-6">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium text-foreground">
-                  Find a Creator
+                  Find a Builder
                 </span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold text-balance leading-[1.1] tracking-tight mb-4">
@@ -81,18 +80,18 @@ const TipperPage = () => {
                 You Love
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground/90 max-w-2xl mx-auto">
-                Search for a creator's wallet address or vault address to send
+                Search for a builder's wallet address or vault address to send
                 them a tip
               </p>
             </div>
 
-            <Card className="glass-card border-primary/20 max-w-2xl mx-auto">
+            <Card className="glass-card border-none max-w-2xl mx-auto">
               <CardHeader>
                 <CardTitle className="text-2xl text-center">
-                  Search Creator
+                  Search Builder
                 </CardTitle>
                 <CardDescription className="text-center">
-                  Enter a wallet address or vault address to find the creator
+                  Enter a wallet address or vault address to find the builder
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -112,9 +111,7 @@ const TipperPage = () => {
                     size="lg"
                     className="w-full sm:w-auto group cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 py-6 rounded-2xl neon-glow-purple transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-primary/50"
                   >
-                    <Search className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
                     {isSearching ? "Searching..." : "Search"}
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
 
@@ -146,17 +143,16 @@ const TipperPage = () => {
                 )}
 
                 {creatorAdd.isExist && creatorAdd.pdaAcc && (
-                  <Card className="border-primary/30 bg-primary/5">
+                  <Card className=" bg-primary/5 border-none">
                     <CardContent className="pt-6">
                       <div className="space-y-4">
                         <div className="flex items-center gap-2 mb-4">
-                          <Coins className="w-5 h-5 text-primary" />
                           <h3 className="text-lg font-semibold">
-                            Creator Found!
+                            Builder Found!
                           </h3>
                         </div>
                         <p className="text-sm text-muted-foreground mb-4">
-                          Ready to tip this creator? Click the button below to
+                          Ready to tip this builder? Click the button below to
                           go to their tip page.
                         </p>
                         <Link
@@ -165,9 +161,9 @@ const TipperPage = () => {
                         >
                           <Button
                             size="lg"
-                            className="w-full group cursor-pointer bg-secondary hover:bg-secondary/90 text-primary-foreground font-semibold text-base px-10 py-6 rounded-2xl neon-glow-green transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-secondary/50"
+                            className="w-full group cursor-pointer bg-secondary hover:bg-secondary/90 text-primary-foreground font-semibold text-base px-10 py-6 rounded-2xl neon-glow-blue transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-secondary/50"
                           >
-                            <Coins className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                            <span className="flex items-center mr-3"></span>
                             Go to Tip Page
                             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                           </Button>
