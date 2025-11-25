@@ -140,6 +140,7 @@ export async function getDepositTip(
     .depositTip(bnAmount)
     .accounts({
       sender: wallet.publicKey,
+      // @ts-expect-error vault property is expected by anchor IDL but not typed
       vault: creatorVault,
       systemProgram: SystemProgram.programId,
     })
@@ -187,7 +188,7 @@ export const balOfVaultAccount = async (
   address: PublicKey
 ) => {
   try {
-    let lamp = await conn.getBalance(address);
+    const lamp = await conn.getBalance(address);
     // console.log({ lamp });
     return lamp / 1000000000;
   } catch (error) {
@@ -204,7 +205,7 @@ export const balOfCreatorVaultAccount = async (
       [Buffer.from("vault"), new PublicKey(address).toBuffer()],
       new PublicKey(idl.address)
     );
-    let lamp = await conn.getBalance(vaultPda);
+    const lamp = await conn.getBalance(vaultPda);
     console.log("Builder Vault Lamp:", lamp);
     return lamp / 1000000000;
   } catch (error) {
@@ -229,7 +230,7 @@ export const checkCreatorVaultAccount = async (
   pdaInput: string,
   conn: Connection
 ) => {
-  let accDetails: {
+  const accDetails: {
     isExist: boolean;
     pdaAcc: null | string;
     message: string;
