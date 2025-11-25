@@ -9,9 +9,9 @@ export const SOLBalance = () => {
   return (
     <div>
       {
-        <p className="font-semibold text-white text-base flex items-center justify-center ">
+        <p className="font-semibold  text-[#ab9ff1] text-base flex items-center justify-center ">
           <span
-            className="px-1 pl-3 animate-fadeInUp  transition-all  duration-500"
+            className="px-1 pl-3 animate-fadeInUp  transition-all  duration-500 "
             style={{
               display: "inline-block",
               animation: "fadeInUp 0.6s",
