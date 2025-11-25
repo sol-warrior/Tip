@@ -9,6 +9,7 @@ import {
 } from "@/src/components/ui/card";
 import React, { useEffect, useState } from "react";
 import {
+  balOfCreatorVaultAccount,
   balOfVaultAccount,
   getCreatorVaultAccount,
   getWithdrawAllTip,
@@ -32,6 +33,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatAddress } from "@/src/lib/utils";
+import solanaImg from "@/src/images/solana.png";
+import Image from "next/image";
 
 const BuilderPage = () => {
   const [isActivated, setIsActivated] = useState(false);
@@ -109,7 +112,7 @@ const BuilderPage = () => {
   const accBalance = async () => {
     if (!wallet?.publicKey) return;
 
-    const bal = await balOfVaultAccount(connection, wallet.publicKey);
+    const bal = await balOfCreatorVaultAccount(connection, wallet.publicKey);
     setBal(bal);
   };
 
@@ -170,7 +173,7 @@ const BuilderPage = () => {
     {
       label: "Available balance",
       value: `${vaultBal.toFixed(4)} SOL`,
-      icon: Coins,
+      icon: () => <Image src={solanaImg} alt="Solana" className="w-5 h-5" />,
       accent: vaultBal > 0 ? "text-secondary" : "text-muted-foreground",
     },
   ];
@@ -210,9 +213,9 @@ const BuilderPage = () => {
                     onClick={handleActivateWallet}
                     disabled={isLoading || !wallet}
                     size="lg"
-                    className="group cursor-pointer bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                    className="w-full sm:w-auto group cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 py-6 rounded-2xl neon-glow-purple transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-primary/50 flex items-center justify-center"
                   >
-                    <Wallet className="w-5 h-5 mr-2 group-hover:rotate-6 transition-transform" />
+                    <Wallet className="w-5 h-5 mr-2 group-hover:rotate-1 transition-transform" />
                     {isActivated
                       ? "Refresh vault status"
                       : isLoading
@@ -318,8 +321,8 @@ const BuilderPage = () => {
                         All set! Your vault is live.
                       </p>
                       <p className="text-sm text-secondary/70">
-                        Share your link or embed the QR so supporters can tip
-                        you instantly. You can withdraw anytime.
+                        Share your link so supporters can tip you instantly. You
+                        can withdraw anytime.
                       </p>
                     </div>
                   ) : (
@@ -399,7 +402,7 @@ const BuilderPage = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="shrink-0"
+                              className="shrink-0 cursor-pointer"
                             >
                               <ExternalLink className="w-4 h-4" />
                             </Button>
@@ -442,7 +445,7 @@ const BuilderPage = () => {
                       <Button
                         onClick={handleWithdrawTip}
                         size="lg"
-                        className="w-full group cursor-pointer bg-secondary hover:bg-secondary/90 text-primary-foreground font-semibold text-base px-10 py-6 rounded-2xl neon-glow-green transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-secondary/50"
+                        className="w-full group cursor-pointer bg-secondary hover:bg-secondary/90 text-primary-foreground font-semibold text-base px-10 py-6 rounded-2xl neon-glow-blue transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-secondary/50"
                       >
                         Withdraw
                         <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
