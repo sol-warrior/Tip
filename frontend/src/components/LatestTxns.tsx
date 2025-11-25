@@ -44,7 +44,7 @@ export default function LatestTxns() {
         </h2>
       </div>
 
-      <Card className="glass-card border-primary/20 overflow-hidden shadow-2xl">
+      <Card className="glass-card border-none overflow-hidden shadow">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
