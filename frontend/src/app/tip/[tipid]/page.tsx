@@ -16,13 +16,11 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import {
-  Coins,
   Sparkles,
   ArrowRight,
   CheckCircle2,
   ExternalLink,
   TrendingUp,
-  Wallet,
   Share2,
   Copy,
   Check,
@@ -302,7 +300,7 @@ const TipPage = () => {
                     Send a tip
                   </CardTitle>
                   <CardDescription>
-                    Enter the SOL amount you'd like to tip. You can review
+                    Enter the SOL amount you&apos;d like to tip. You can review
                     before confirming in your wallet.
                   </CardDescription>
                 </CardHeader>
@@ -357,7 +355,6 @@ const TipPage = () => {
                     size="lg"
                     className="w-full group  cursor-pointer bg-secondary hover:bg-secondary/90 text-primary-foreground font-semibold text-base px-10 py-6 rounded-2xl neon-glow-blue transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-secondary/50 mt-8"
                   >
-                    {/* <Coins className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" /> */}
                     {isLoading ? "Processing..." : `Tip ${amount || "0"} SOL`}
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
