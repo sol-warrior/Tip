@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import solanaImg from "@/src/images/solana.png";
+import Image from "next/image";
 
 export function HeroSection({
   isWalletConnected,
@@ -19,14 +21,20 @@ export function HeroSection({
   return (
     <section className="text-center py-20 md:py-32 max-w-5xl mx-auto">
       <div className="space-y-8 relative">
-        {/* <MovingBorderButton> */}
         <div className=" inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-primary/40 mb-6">
           <Sparkles className="w-4 h-4 text-primary" />
           <span className="text-sm font-medium text-foreground">
-            {"Powered by Solana"}
+            <span className="inline-flex items-center gap-2">
+              Powered by
+              <Image
+                src={solanaImg}
+                alt="Solana"
+                className="inline-block w-4 h-4 align-middle"
+              />
+            </span>
           </span>
         </div>
-        {/* </MovingBorderButton> */}
+
         <h1 className="text-6xl md:text-8xl font-bold text-balance leading-[1.1] tracking-tight">
           {"Support the "}
           <span className="bg-linear-to-r from-primary  to-secondary bg-clip-text text-transparent inline-block">
