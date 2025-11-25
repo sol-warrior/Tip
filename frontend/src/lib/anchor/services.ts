@@ -187,11 +187,25 @@ export const balOfVaultAccount = async (
   address: PublicKey
 ) => {
   try {
+    let lamp = await conn.getBalance(address);
+    // console.log({ lamp });
+    return lamp / 1000000000;
+  } catch (error) {
+    return 0;
+  }
+};
+
+export const balOfCreatorVaultAccount = async (
+  conn: Connection,
+  address: PublicKey
+) => {
+  try {
     const [vaultPda, _] = PublicKey.findProgramAddressSync(
       [Buffer.from("vault"), new PublicKey(address).toBuffer()],
       new PublicKey(idl.address)
     );
     let lamp = await conn.getBalance(vaultPda);
+    console.log("Builder Vault Lamp:", lamp);
     return lamp / 1000000000;
   } catch (error) {
     return 0;
