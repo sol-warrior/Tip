@@ -7,13 +7,15 @@ import { getAllVaultAccount } from "../lib/anchor/services";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { getConnection } from "../lib/solana/connection";
 import { useEffect, useState } from "react";
+import { Meteors } from "../components/ui/Meteors";
 
 export default function Home() {
   const wallet = useAnchorWallet();
 
   return (
     <div className="bg-zinc-50 font-sans dark:bg-black min-h-screen">
-      <main className="h-full">
+      <main className="relative h-full">
+        <Meteors number={15} />
         <div className="py-7 px-6 md:px-12">
           <Navbar />
           <HeroSection isWalletConnected={!wallet} />
@@ -23,6 +25,8 @@ export default function Home() {
           <LatestTxns />
         </div>
       </main>
+
+      {/* <Example /> */}
     </div>
   );
 }
