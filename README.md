@@ -6,6 +6,14 @@
 
 ## Project Overview
 
+
+
+
+https://github.com/user-attachments/assets/4478f9c1-e513-4854-bf29-e1422f2f7ae0
+
+
+
+
 ### Description
 
 Tip is a non-custodial tipping platform for the Solana ecosystem. Builders can deploy their own vault PDA in a single click, receive direct SOL tips through personalized landing pages, and withdraw proceeds at any time. Supporters experience an inviting interface with preset amounts, real-time vault telemetry, and immediate explorer links. A public leaderboard and builder discovery flow highlight the most-supported creators so the community can surface high-signal builders quickly.
@@ -88,7 +96,7 @@ pnpm install   # installs TS/Mocha deps (first run only)
 anchor test    # builds program and executes the full suite
 ```
 
-### Additional Notes for Evaluators
+### Additional Notes 
 
 - Program events (`InitVaultEvent`, `TipDeposited`, `TipWithdrawEvent`) make it trivial to plug analytics providers or indexers into the flow.
 - Frontend helpers (`getCreatorVaultAccount`, `getAllVaultAccount`, `checkCreatorVaultAccount`) are thin wrappers around Anchor RPC calls, showing how the program can be composed into other apps.
